@@ -18,7 +18,8 @@ function getLocation(city){
         if (searchResult.rows.length > 0) {
             return(searchResult.rows[0]);
         } else {
-            const API_URL = (`https://eu1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${city}&format=json`);
+            const geocodeAPIkey = process.env.GEOCODE_API_KEY; 
+            const API_URL = (`https://eu1.locationiq.com/v1/search.php?key=${geocodeAPIkey}&q=${city}&format=json`);
             
             return superAgent.get(API_URL)
 
