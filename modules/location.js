@@ -31,7 +31,7 @@ function getLocation(city){
 
 }
 function storeINdatabase(city, locData){
-    const locationData = new Location(city, locData[0]);
+    const locationData = new Location(city, locData)
     const SQL = 'INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES ($1,$2,$3,$4) RETURNING *';
     const valueSQL = [locationData.search_query, locationData.formatted_query, locationData.latitude, locationData.longitude];
     return client.query(SQL, valueSQL).then((results) => {
