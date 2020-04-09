@@ -19,23 +19,19 @@ function getLocation(city){
             return(searchResult.rows[0]);
         } else {
             const geocodeAPIkey = process.env.GEOCODE_API_KEY; 
-            const API_URL = (`https://eu1.locationiq.com/v1/search.php?key=${geocodeAPIkey}&q=${city}&format=json`);
+            const locationAPIurl = (`https://eu1.locationiq.com/v1/search.php?key=${geocodeAPIkey}&q=${city}&format=json`);
             
-            return superAgent.get(API_URL)
+            return superAgent.get(locationAPIurl)
 
                 .then((locData) => {
                     storeINdatabase(city, locData.body)
-                }).catch(() =>
-                    app.use((error, request, response) => {
-                        response.status(500).send(error);
-                    })
-                );
+                }).catch((error) =>helpers.errorHandler(error, request, response));
         }
     })
 
 }
 function storeINdatabase(city, locData){
-    const locationData = new Location(locData[0]);
+    const locationData = new Location(city, locData[0]);
     const SQL = 'INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES ($1,$2,$3,$4) RETURNING *';
     const valueSQL = [locationData.search_query, locationData.formatted_query, locationData.latitude, locationData.longitude];
     return client.query(SQL, valueSQL).then((results) => {
